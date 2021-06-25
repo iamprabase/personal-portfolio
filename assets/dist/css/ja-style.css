@@ -1,0 +1,235 @@
+#client_length,
+#employeegroups_length,
+#brands_length,
+#product_length,
+#categories_length,
+#units_length,
+#employee_length {
+    text-align: left;
+}
+#brands_filter,
+#units_filter,
+#categories_filter,
+#product_filter,
+#client_filter,
+#employeegroups_filter,
+#employee_filter {
+    text-align: right;
+}
+
+.alignleft>div>label {
+    float: left;
+}
+
+.alignright>div>label {
+    float: right;
+}
+
+.table {
+    width: 100% !important;
+}
+
+
+@media screen and (max-width: 1300px) {
+
+    body {
+        overflow: auto !important;
+    }
+
+    .wrapper {
+        width: 1348px;
+        overflow: auto !important;
+    }
+
+
+}
+
+@media (min-width: 320px) {
+ 
+    .skin-green-light .main-header .navbar .dropdown-menu li a {
+      color: inherit!important; 
+    }
+    .activitytimeposition{
+      top: 134%!important;
+      left: 181%!important;
+    }
+    .dateposition{
+      left :258%!important; 
+      right:auto!important;
+    }
+    .orderdateposition{
+      left :199%!important; 
+      right:auto!important;
+    }
+    .expensedateposition{
+      left :199%!important; 
+      right:auto!important;
+    }
+    .activitydateposition{
+      left :215%!important; 
+      right:auto!important;
+    }
+    .pdcdateposition{
+      left :198%!important; 
+      right:auto!important;
+    }
+    .announcedateposition{
+      left :198%!important; 
+      right:auto!important;
+    }
+    .leavedateposition{
+      left :198%!important; 
+      right:auto!important;
+    }
+    .tourplandateposition{
+      left :198%!important; 
+      right:auto!important;
+    }
+    .eagpsdateposition{
+      left :157%!important; 
+      right:auto!important;
+    }
+    .cicodateposition{
+      left :172%!important; 
+      right:auto!important;
+    }
+    .dsordateposition{
+      left :198%!important; 
+      right:auto!important;
+    }
+    .oreportsdateposition{
+      left :216%!important; 
+      right:auto!important;
+    }
+    .spwreportsdateposition{
+      left :111%!important; 
+      right:auto!important;
+    }
+    .dprdateposition{
+      left :198%!important; 
+      right:auto!important;
+    }
+    .derdateposition{
+      left :198%!important; 
+      right:auto!important;
+    }
+    .beatreportdateposition{
+      left :115%!important; 
+      right:auto!important;
+    }
+    .stockreportdateposition{
+      left :215%!important; 
+      right:auto!important;
+    }
+    .returnreportdateposition{
+      left :215%!important; 
+      right:auto!important;
+    }
+   .small-modal{
+          width:80%;
+          margin:50px auto;
+      }
+  }
+  @media (min-width: 375px) {
+    .activitytimeposition {
+      top: 134%!important;
+      left: 156%!important;
+  }
+  }
+  @media (min-width: 425px) {
+    .activitytimeposition {
+      top: 134%!important;
+      left: 138%!important;
+  }
+  }
+  @media (min-width: 768px) {
+      
+      
+  .dateposition{
+    left :120%!important;
+  }
+  .activitytimeposition{
+    top: 125%!important;
+    left: 93%!important;
+}
+  .orderdateposition{
+    left :99%!important; 
+    right:auto!important;
+  }
+
+  .expensedateposition{
+    left :99%!important; 
+    right:auto!important;
+  }
+  .expensedateposition{
+    left :99%!important; 
+    right:auto!important;
+  }
+  .activitydateposition{
+    left :105%!important; 
+    right:auto!important;
+  }
+  .pdcdateposition{
+    left :99%!important; 
+    right:auto!important;
+  }
+  .announcedateposition{
+    left :99%!important; 
+    right:auto!important;
+  }
+  .leavedateposition{
+    left :99%!important; 
+    right:auto!important;
+  }
+  .tourplandateposition{
+    left :99%!important; 
+    right:auto!important;
+  }
+  .eagpsdateposition{
+    left :85%!important; 
+    right:auto!important;
+  }
+  .cicodateposition{
+    left :85%!important; 
+    right:auto!important;
+  }
+  .dsordateposition{
+    left :99%!important; 
+    right:auto!important;
+  }
+  .oreportsdateposition{
+    left :105%!important; 
+    right:auto!important;
+  }
+  .spwreportsdateposition{
+    left :69%!important; 
+    right:auto!important;
+  }
+  .dprdateposition{
+    left :69%!important; 
+    right:auto!important;
+  }
+  .derdateposition{
+    left :99%!important; 
+    right:auto!important;
+  }
+  .beatreportdateposition{
+    left :71%!important; 
+    right:auto!important;
+  }
+  .stockreportdateposition{
+    left :105%!important; 
+    right:auto!important;
+  }
+  .returnreportdateposition{
+    left :105%!important; 
+    right:auto!important;
+  }
+  
+}
+@media (min-width: 1024px) {
+  .activitytimeposition {
+    top: 125%!important;
+    left: 70%!important;
+}
+}

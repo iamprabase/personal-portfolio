@@ -1,0 +1,6 @@
+PartyName,ContactPersonName,PartyType,Country,State,City,Pin,PartyCode,Superior,Beat,BusinessType, Pan,AboutCompany,Website ,Email ,PhoneCode ,Phone   ,Mobile,AddressLine1  ,AddressLine2  ,OpeningBalance  ,CreditLimit ,CreditDays  ,Latitude  ,Longitude,category_NAME,category_NAME,category_NAME,category_NAME
+party1,Bikash,desig,Nepal,koshi,Biratnagar,,,nova1,,a,,,,,,,,,,,,,,,,,,
+party2,Bikash c,desig,Nepal,koshi,Biratnagar,,,b1,,a,,,,,,,,,,,,,,,,,,
+party3,bikash c jha,desig,Nepal,koshi,Biratnagar,,,b1,,a,,,,,,,,,,,,,,,,,,
+party4,vikas,desig,Nepal,Bihar,Patna,,,b2,,a,,,,,,,,,,,,,,,,,,
+party5,viksh,desig,Nepal,koshi,Biratnagar,,,b2,,a,,,,,,,,,,,,,,,,,,

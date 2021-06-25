@@ -1,0 +1,212 @@
+/**
+  VIEW FOR Daily Party Report
+**/
+CREATE OR REPLACE VIEW party_order_collection_views AS
+SELECT
+    `orders`.`company_id` AS `company_id`,
+    `orders`.`client_id` AS `client_id`,
+    `orders`.`order_date` AS `date`,
+    '0' AS `collection_total_amount`,
+    SUM(`orders`.`grand_total`) AS `order_total_amount`,
+    `orders`.`delivery_status_id` AS `delivery_status_id`,
+    `orders`.`delivery_status_id` AS `collection_delivery_status_id`
+FROM
+    `orders` WHERE `orders`.`client_id` IS NOT NULL 
+GROUP BY
+    `orders`.`company_id`,
+    `orders`.`client_id`,
+    `orders`.`order_date`,
+    `orders`.`delivery_status_id`
+UNION ALL
+SELECT
+    `collections`.`company_id` AS `company_id`,
+    `collections`.`client_id` AS `client_id`,
+    `collections`.`payment_date` AS `payment_date`,
+    SUM(`collections`.`payment_received`) AS `collection_total_amount`,
+    '0' AS `order_total_amount`,
+    NULL AS `delivery_status_id`,
+    NULL AS `collection_delivery_status_id`
+FROM
+    `collections` WHERE `collections`.`client_id` IS NOT NULL 
+GROUP BY
+    `collections`.`company_id`,
+    `collections`.`client_id`,
+    `collections`.`payment_date`
+
+SELECT `company_id` as CompanyID, `date` as Date, `client_id` as ClientID, SUM(`collection_total_amount`) as CollectionTotal, SUM(`order_total_amount`) as OrderTotal FROM `party_order_collection_views` GROUP BY `company_id`, `client_id`, `order_date` ORDER BY `order_date` DESC
+**********************************************************************************************************************************
+/**
+  VIEW FOR Daily Employee Report
+**/
+CREATE OR REPLACE VIEW employee_order_collection_views AS
+SELECT
+    `orders`.`company_id` AS `company_id`,
+    `orders`.`employee_id` AS `employee_id`,
+    `orders`.`order_date` AS `date`,
+    '0' AS `collection_total_amount`,
+    SUM(`orders`.`grand_total`) AS `order_total_amount`,
+    `orders`.`delivery_status_id` AS `delivery_status_id`,
+    `orders`.`delivery_status_id` AS `collection_delivery_status_id`
+FROM
+    `orders`  WHERE `orders`.`employee_id` IS NOT NULL 
+GROUP BY
+    `orders`.`company_id`,
+    `orders`.`employee_id`,
+    `orders`.`order_date`,
+    `orders`.`delivery_status_id`
+UNION ALL
+SELECT
+    `collections`.`company_id` AS `company_id`,
+    `collections`.`employee_id` AS `employee_id`,
+    `collections`.`payment_date` AS `payment_date`,
+    SUM(`collections`.`payment_received`) AS `collection_total_amount`,
+    '0' AS `order_total_amount`,
+    NULL AS `delivery_status_id`,
+    NULL AS `collection_delivery_status_id`
+FROM
+    `collections` WHERE `collections`.`employee_id` IS NOT NULL 
+GROUP BY
+    `collections`.`company_id`,
+    `collections`.`employee_id`,
+    `collections`.`payment_date`
+
+SELECT `company_id` as CompanyID, `date` as Date, `employee_id` as EmployeeID, SUM(`collection_total_amount`) as CollectionTotal, SUM(`order_total_amount`) as OrderTotal FROM `employee_order_collection_views` GROUP BY `company_id`, `employee_id`, `order_date` ORDER BY `order_date` DESC
+----------------------------------------------------------------------------------------------------------------------------------
+=================================================================================================================================
+/******
+
+  If the below "VIEW FOR Employee First CheckIN" / "VIEW FOR Employee Last CheckOut" query gives error while creating the CheckIn CheckOut Views than run query followed by the given queries.
+
+******/
+=================================================================================================================================
+/**
+  VIEW FOR Employee First CheckIN
+**/
+CREATE VIEW employee_checkin_views AS
+SELECT
+    a1.company_id,
+    a1.employee_id,
+    a1.adate AS 'date',
+    a1.atime AS 'checkin_time',
+    a1.address AS 'checkin_address'
+FROM
+    attendances a1
+INNER JOIN
+    (
+    SELECT
+        company_id,
+        employee_id,
+        adate AS 'date',
+        MIN(atime) AS 'checkin_time'
+    FROM
+        attendances
+    GROUP BY
+      company_id,
+      adate,
+      employee_id
+) AS a3
+ON
+    a3.company_id = a1.company_id AND a3.employee_id = a1.employee_id AND a3.date = a1.adate AND a3.checkin_time = a1.atime
+ORDER BY a1.id DESC
+*********************************************************************************************************************************
+/**
+  VIEW FOR Employee Last CheckOut
+**/
+CREATE VIEWS employee_checkout_views AS
+SELECT
+    a1.company_id,
+    a1.employee_id,
+    a1.adate AS 'date',
+    a1.atime AS 'checkout_time',
+    a1.address AS 'checkout_address'
+FROM
+    attendances a1
+INNER JOIN
+    (
+    SELECT
+        company_id,
+        employee_id,
+        adate AS 'date',
+        MAX(atime) AS 'checkout_time'
+    FROM
+        attendances
+    WHERE
+        check_type = 2
+    GROUP BY
+        company_id,
+        adate,
+        employee_id
+) AS a3
+ON
+    a3.company_id = a1.company_id AND a3.employee_id = a1.employee_id AND a3.date = a1.adate AND a3.checkout_time = a1.atime
+ORDER BY a1.id DESC
+=================================================================================================================================
+/******
+
+  If the above query gives error while creating the CheckIn CheckOut Views than run below query.
+
+******/
+=================================================================================================================================
+1.]
+CREATE VIEW employee_checkin_view AS
+SELECT
+    company_id,
+    employee_id,
+    adate AS 'date',
+    MIN(atime) AS 'checkin_time',
+    MIN(check_datetime)
+FROM
+    attendances a1
+WHERE check_type = 1
+GROUP BY
+  company_id,
+  adate,
+  employee_id
+ORDER BY a1.id DESC
+
+CREATE VIEW employee_checkin_views AS
+SELECT
+    a1.company_id,
+    a1.employee_id,
+    a1.adate AS 'date',
+    a1.atime AS 'checkin_time',
+    a1.check_datetime,
+    a1.address AS 'checkin_address'
+FROM
+    attendances a1
+INNER JOIN employee_checkin_view AS a3
+ON
+    a3.company_id = a1.company_id AND a3.employee_id = a1.employee_id AND a3.date = a1.adate AND a3.checkin_time = a1.atime
+ORDER BY a1.id DESC
+===============================================================================================================================
+2.]
+CREATE VIEW employee_checkout_view AS
+SELECT
+    company_id,
+    employee_id,
+    adate AS 'date',
+    MAX(atime) AS 'checkout_time',
+    MAX(check_datetime)
+FROM
+    attendances a1
+WHERE check_type = 2
+GROUP BY
+  company_id,
+  adate,
+  employee_id
+ORDER BY a1.id DESC
+
+CREATE VIEW employee_checkout_views AS
+SELECT
+    a1.company_id,
+    a1.employee_id,
+    a1.adate AS 'date',
+    a1.atime AS 'checkout_time',
+    a1.check_datetime,
+    a1.address AS 'checkout_address'
+FROM
+    attendances a1
+INNER JOIN employee_checkout_view AS a3
+ON
+    a3.company_id = a1.company_id AND a3.employee_id = a1.employee_id AND a3.date = a1.adate AND a3.checkout_time = a1.atime
+ORDER BY a1.id DESC

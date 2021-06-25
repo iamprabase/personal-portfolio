@@ -1,0 +1,38 @@
+<Files ~ "^.*\.([Ee][Nn][Vv])">
+ order allow,deny
+ deny from all
+ satisfy all
+</Files>
+
+<Files ~ "^.*\.([Ll][Oo][Gg])">
+ order allow,deny
+ deny from all
+ satisfy all
+</Files>
+
+
+#<Files ~ "^.*\.([Jj][Ss][Oo][Nn])">
+ #order allow,deny
+ #deny from all
+ #satisfy all
+#</Files>
+
+
+<Files ~ "^.*\.([Ll][Oo][Cc][Kk])">
+ order allow,deny
+ deny from all
+ satisfy all
+</Files>
+
+<Files ~ "^.*\.([Tt][Xx][Tt])">
+ order allow,deny
+ deny from all
+ satisfy all
+</Files>
+
+
+<Files ~ "^.*\.([Cc][Oo][Nn][Ff][Ii][Gg])">
+ order allow,deny
+ deny from all
+ satisfy all
+</Files>

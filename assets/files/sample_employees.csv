@@ -1,0 +1,11 @@
+Name,Email,PhoneCode,Phone,Password,Role,Designation,Superior,BirthDate,Gender,FatherName,EmployeeCode,EmployeeGroup,TotalSalary,PermittedLeave,JoiningDate,LastWorkingDay,ContactPhoneCode,AlternatePhone,LocalAddress,PermanentAddress,EmergencyContactName,RelationToYou,EmergencyPhoneCode,EmergencyPhone,AccountHolderName,AccountNumber,BankName,IFSCCode,Pan,Branch
+a,a@gmail.com,977,1112223330,abcde,test,A1,a,,Male,,,,,,,,,,,,,,,,,,vxcvf,,,
+b,b@gmail.com,977,1112223332,abcde,test2,desig,a,,Female,,,,,,,,,,,,,,,,,,xc,,,
+k,c@gmail.com,977,1112223333,abcde,test,desig,a,,Male,,,,,,,,,,,,,,,,,,xcv,,,
+m,d@gmail.com,977,1112223334,abcde,test2,desig,b,,Female,,,,,,,,,,,,,,,,,,xcd,,,
+n,e@gmail.com,977,1112223335,abcde,test,A1,k,,Male,,,,,,,,,,,,,,,,,,xzc,,,
+o,f@gmail.com,977,1112223336,abcde,test2,desig,m,,Female,,,,,,,,,,,,,,,,,,,,,
+q,g@gmail.com,977,1112223337,abcde,test,desig,m,,Male,,,,,,,,,,,,,,,,,,,,,
+r,h@gmail.com,977,1112223338,abcde,test2,A1,n,,Female,,,,,,,,,,,,,,,,,,,,,
+s,i@gmail.com,977,1112223339,abcde,test,desig,n,,Male,,,,,,,,,,,,,,,,,,,,,
+t,j@gmail.com,977,1112223340,abcde,test2,A1,o,,Female,,,,,,,,,,,,,,,,,,,,,

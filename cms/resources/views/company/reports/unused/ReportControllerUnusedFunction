@@ -1,0 +1,390 @@
+
+public function myatten(){
+  $attendances = \DB::table('attendances AS c')
+                ->select(\DB::raw('c.id, c.company_id,c.employee_id,c.check_datetime,c.check_type, (SELECT MIN(check_datetime) FROM attendances t WHERE t.company_id = c.company_id AND t.check_type=1) AS checkin, (SELECT MAX(check_datetime) FROM attendances a WHERE a.company_id = c.company_id AND a.check_type=1) AS checkout'))
+                ->groupBy('c.employee_id')
+                ->get();
+  echo "<pre>";
+  print_r($attendances);
+}
+
+public function employee(){
+  $company_id = config('settings.company_id');
+  $employees = Employee::where('company_id', $company_id)->pluck('name', 'id')->toArray();
+  return view('company.reports.employee', compact('employees'));
+}
+
+public function getEmployeeReport(Request $request){
+  $company_id = config('settings.company_id');
+  $employees = Employee::where('company_id', $company_id)->pluck('name', 'id')->toArray();
+  return view('company.reports.employee', compact('employees'));
+}
+
+public function employeereport(Request $request){
+  $company_id = config('settings.company_id');
+  $employees = Employee::where('company_id', $company_id)->pluck('name', 'id')->toArray();
+  $orders = Order::where('company_id', $company_id)->where('sales_person', $request->employee_id)->orderBy('created_at', 'desc')
+      ->get();
+
+  if ($request->from_date) {
+      $from_date = $request->from_date;
+  } else {
+      $from_date = date('Y-m-d');
+  }
+
+
+  if ($request->to_date) {
+      $to_date = $request->to_date;
+  } else {
+      $to_date = date('Y-m-d');
+  }
+
+  $attendances = Attendance::where('company_id', $company_id)
+      ->if($request->employee_id, 'employee_id', '=', $request->employee_id)
+      ->where('check_datetime', '>=', $from_date . ' 00:00:00')
+      ->where('check_datetime', '<=', $to_date . ' 23:59:59')
+      ->orderBy('created_at', 'desc')
+      ->groupBy(DB::raw("DAY(check_datetime)"))
+      ->get();
+
+
+  return view('company.reports.employeereport', compact('employees', 'orders', 'attendances'));
+
+}
+
+public function collectionreport(Request $request)
+{
+  $company_id = config('settings.company_id');
+
+  $employees = Employee::where('company_id', $company_id)->pluck('name', 'id')->toArray();
+
+  $clients = Client::where('company_id', $company_id)->pluck('company_name', 'id')->toArray();
+
+  if ($request->from_date) {
+      $from_date = $request->from_date;
+  } else {
+      $from_date = date('Y-m-d');
+  }
+
+  if ($request->to_date) {
+      $to_date = $request->to_date;
+  } else {
+      $to_date = date('Y-m-d');
+  }
+
+  if ($request->client_id) {
+      $client_id = $request->client_id;
+  }
+
+  if ($request->employee_id) {
+      $employee_id = $request->employee_id;
+  }
+
+  // $to_date = date('Y-m-d');
+
+  $collections = Collection::where('company_id', $company_id)->orderBy('created_at', 'desc')
+      ->if($request->client_id, 'client_id', '=', $request->client_id)
+      ->if($request->employee_id, 'employee_id', '=', $request->employee_id)
+      ->where('payment_date', '>=', $from_date)
+      ->where('payment_date', '<=', $to_date)
+      ->orderBy('created_at', 'desc')
+      ->get();
+
+  return view('company.reports.collectionreport', compact('employees', 'clients', 'collections', 'to_date', 'from_date', 'client_id', 'employee_id'));
+}
+
+public function collectionreportfilter(Request $request)
+{
+
+  $company_id = config('settings.company_id');
+  $employees = Employee::where('company_id', $company_id)->pluck('name', 'id')->toArray();
+  $clients = Client::where('company_id', $company_id)->pluck('name', 'id')->toArray();
+
+  $client_id = $request->client_id;
+
+  $employee_id = $request->employee_id;
+
+  $collections = Collection::where('company_id', $company_id)
+      ->if($request->client_id, 'client_id', '=', $request->client_id)
+      ->if($request->employee_id, 'employee_id', '=', $request->employee_id)
+      ->where('payment_date', '>=', $request->from_date)
+      ->where('payment_date', '<=', $request->to_date)
+      ->orderBy('created_at', 'desc')
+      ->get();
+
+
+  return view('company.reports.collectionreport', compact('employees', 'clients', 'collections', 'client_id', 'employee_id'));
+
+}
+
+ public function meetingreport(Request $request)
+{
+
+
+  $company_id = config('settings.company_id');
+
+  $employees = Employee::where('company_id', $company_id)->pluck('name', 'id')->toArray();
+
+  $clients = Client::where('company_id', $company_id)->pluck('name', 'id')->toArray();
+
+  if ($request->from_date) {
+
+      $from_date = $request->from_date;
+
+  } else {
+
+      $from_date = date('Y-m-d');
+
+  }
+
+
+  if ($request->to_date) {
+
+      $to_date = $request->to_date;
+
+  } else {
+
+      $to_date = date('Y-m-d');
+
+  }
+
+  if ($request->client_id) {
+
+      $client_id = $request->client_id;
+
+  }
+
+  if ($request->employee_id) {
+
+      $employee_id = $request->employee_id;
+
+  }
+
+  $meetings = Meeting::where('company_id', $company_id)->orderBy('created_at', 'desc')
+      ->if($request->client_id, 'client_id', '=', $request->client_id)
+      ->if($request->employee_id, 'employee_id', '=', $request->employee_id)
+      ->where('meetingdate', '>=', $from_date)
+      ->where('meetingdate', '<=', $to_date)
+      ->orderBy('created_at', 'desc')
+      ->get();
+
+
+  return view('company.reports.meetingreport', compact('employees', 'clients', 'meetings'));
+
+}
+
+public function companyreach()
+{
+  $company_id = config('settings.company_id');
+
+  $employees = Employee::where('company_id', $company_id)->pluck('name', 'id')->toArray();
+
+  return view('company.reports.companyreach', compact('employees'));
+
+}
+
+public function employeetracking(){
+  $company_id = config('settings.company_id');
+  $employees = Employee::where('company_id', $company_id)->pluck('name', 'id')->toArray();
+  return view('company.reports.employeetracking', compact('employees'));
+}
+
+public function reportGenerator(Request $request){
+  $data = array();
+  return view('company.reports.reportgenerator', compact('data'));
+}
+
+public function getreportdata(Request $request){
+  $reportType = $request->reportType;
+  $startDate = $request->startDate;
+  $endDate = $request->endDate;
+
+  $dataArray = array();
+
+    $companyID = config('settings.company_id');
+
+    $clients = Client::where('company_id', $companyID)->pluck('company_name', 'id')->toArray();
+
+
+    $products = DB::table('products')
+        ->select('products.product_name', 'products.id', 'categories.name as category_name', 'unit_types.name as unit_name', 'unit_types.symbol as unit_symbol')
+        ->leftJoin('categories', 'categories.id', '=', 'products.category_id')
+        ->leftJoin('unit_types', 'unit_types.id', '=', 'products.unit')
+        ->where("products.company_id", $companyID)
+        ->where("products.status", "Active")
+        ->get()->toArray();
+
+
+    $countTotalProducts = count($products);
+
+
+    $groupedProducts = arrayGroupBy($products, "category_name", true);
+
+
+    $topRaws = array(array("text" => ""), array("text" => ""), array("merge" => array("c" => $countTotalProducts - 1), "style" => array("font" => array("bold" => true)), "text" => "Products"));
+
+    array_push($dataArray, $topRaws);
+
+
+    $categoriesRaw = array(array("text" => ""), array("text" => ""));
+
+    $productRaws = array(array("text" => "Party Name"), array("text" => "Address"));
+
+
+    foreach ($groupedProducts as $key => $value) {
+
+        $tempProductCount = count($value);
+
+
+        $tempC = $tempProductCount - 1;
+
+
+        $tempArray = array(
+
+            "merge" => array("c" => $tempC),
+
+            "style" => array("font" => array("bold" => true)),
+
+            "text" => $key
+
+        );
+
+
+        array_push($categoriesRaw, $tempArray);
+
+
+        for ($i = 0; $i < $tempProductCount; $i++) {
+
+            $tempProductName = $value[$i]->product_name;
+
+            if ($i < $tempC) array_push($categoriesRaw, array("text" => ""));
+
+            array_push($productRaws, array("text" => $tempProductName));
+
+
+        }
+
+    }
+
+
+    array_push($dataArray, $categoriesRaw);
+
+    array_push($dataArray, $productRaws);
+
+
+    $data = DB::table('orders')
+        ->select('clients.id AS client_id', 'clients.company_name', 'orders.id AS order_id', 'orderproducts.product_id', 'orderproducts.product_name', 'orderproducts.quantity', 'orderproducts.amount')
+        ->leftJoin('orderproducts', 'orders.id', '=', 'orderproducts.order_id')
+        ->leftJoin('clients', 'orders.client_id', '=', 'clients.id')
+        ->where("orders.company_id", $companyID)
+        ->where('orders.order_date', '>=', $startDate)
+        ->where('orders.order_date', '<=', $endDate)
+        ->get()->toArray();
+
+    $groupedDataByParty = arrayGroupBy($data, 'client_id', true);
+
+
+    foreach ($groupedDataByParty as $key => $value) {
+
+        $tempArray = array();
+
+        array_push($tempArray, array('text' => getArrayValue($clients, $key)));
+
+        array_push($tempArray, array('text' => ""));
+
+        $finalArray = $this->getTotalProductOrder($key, $groupedDataByParty, $groupedProducts, $tempArray, $reportType);
+
+        array_push($dataArray, $finalArray);
+
+    }
+
+
+    $tableData = array();
+
+    $sheet1 = array(
+
+        "sheetName" => "Sheet1",
+
+        "data" => $dataArray
+
+    );
+
+    array_push($tableData, $sheet1);
+
+    echo json_encode($tableData);
+
+    exit();
+
+}
+
+private function getTotalProductOrder($clientID, $groupedDataByParty, $groupedProducts, $tempArray, $reportType)
+{
+
+
+  $finalArray = $tempArray;
+
+  if (empty($clientID) || empty($groupedDataByParty) || empty($groupedProducts) || empty($reportType)) return $finalArray;
+
+  $products = array();
+
+  foreach ($groupedProducts as $key => $value) {
+
+      if (!empty($value)) {
+
+          foreach ($value as $k => $v) {
+
+              array_push($products, $v);
+
+          }
+
+      }
+
+  }
+
+  $tempOrderProduct = $groupedDataByParty[$clientID];
+
+
+  foreach ($products as $key => $value) {
+
+      $tempProductID = getObjectValue($value, 'id');
+
+
+      if (!empty($tempOrderProduct)) {
+
+          $cellValue = 0;
+
+          foreach ($tempOrderProduct as $k => $v) {
+
+              $dataProductID = getObjectValue($v, "product_id");
+
+              if ($tempProductID == $dataProductID) {
+
+                  if ($reportType == "orderReportType1") {
+
+                      $tempCellValue = getObjectValue($v, 'quantity');
+
+                  } else if ($reportType == "orderReportType2") {
+
+                      $tempCellValue = getObjectValue($v, 'amount');
+
+                  }
+
+
+                  $cellValue = $cellValue + $tempCellValue;
+
+              }
+
+          }
+
+          $myText = $cellValue > 0 ? $cellValue : "";
+
+          array_push($finalArray, array("text" => $myText));
+
+      }
+
+
+  }
+
+  return $finalArray;
+
+}
